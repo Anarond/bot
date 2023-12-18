@@ -1,5 +1,6 @@
 import json
 import requests
+import time
 
 d = {}
 with open("data.txt") as file:
@@ -16,7 +17,6 @@ channels = ''.join(d['channels'])
 client_id = ''.join(d['client_id'])
 client_secret = ''.join(d['client_secret'])
 channel_name = ''.join(d['channel_name'])
-#twitch_token1 = ''
 #twitch_status = 401
 
 def get_twitch_token(client_id, client_secret):
@@ -33,13 +33,15 @@ def get_twitch_token(client_id, client_secret):
     return twitch_token
 #print(get_twitch_token(client_id, client_secret))
 
-def get_twitch_status(client_id, get_twitch_token, channel_name):
+twitch_token = get_twitch_token(client_id, client_secret)
+
+def get_twitch_status(client_id, twitch_token, channel_name):
     url = 'https://api.twitch.tv/helix/streams?user_login=' + channel_name
     headers = {
         'Client-ID': client_id,
-        'Authorization': f'Bearer {get_twitch_token}',
+        'Authorization': f'Bearer {twitch_token}',
     }
-    requests_status = requests.get(url, headers)
+    requests_status = requests.get(url, headers=headers)
     status_to_dict = json.loads(requests_status.text)
     if status_to_dict['status'] == 401:
         return '401'
@@ -47,7 +49,7 @@ def get_twitch_status(client_id, get_twitch_token, channel_name):
         return 'offline'
     else:
         return 'online'
-#print(get_twitch_status(client_id, get_twitch_token, channel_name))
+#print(get_twitch_status(client_id, twitch_token, channel_name))
 
 def get_twitch_data(client_id, get_twitch_token, channel_name):
     url = 'https://api.twitch.tv/helix/streams?user_login=' + channel_name
