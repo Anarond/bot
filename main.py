@@ -43,7 +43,7 @@ def get_twitch_status(client_id, get_twitch_token, channel_name):
     status_to_dict = json.loads(requests_status.text)
     if status_to_dict['status'] == 401:
         return '401'
-    elif len(status_to_dict['data']) < 0:
+    elif len(status_to_dict['data']) < 1:
         return 'offline'
     else:
         return 'online'
@@ -58,3 +58,4 @@ def get_twitch_data(client_id, get_twitch_token, channel_name):
     requests_status = requests.get(url, headers)
     status_to_dict = json.loads(requests_status.text)
     return status_to_dict
+
